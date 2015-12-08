@@ -1,21 +1,35 @@
 // YOUR CODE HERE:
 
-var message = {
-  username: 'XXXXXXXXXXXX',
-  text: 'trololo',
-  roomname: '4chan'
-};
+// var message = {
+//   username: 'XXXXXXXXXXXX',
+//   text: 'trololo',
+//   roomname: '4chan'
+// };
 
 var app = {};
 app.server = 'https://api.parse.com/1/classes/chatterbox';
-app.init = function(){};
+
+app.init = function(){
+  $('#form').submit(function(event){
+    event.preventDefault();
+    console.log('hah! got this!');
+    app.handleSubmit();
+  });
+};
+
 app.clearMessages = function(){
   $('#chats').children().remove();
 };
 app.addMessage = function(message){
-  var $newStuff = $('<div>'+message.text+'</div>');
+  var $newStuff = $('<div class="chat"><div class = "username">'+message.username+'</div>'
+    +'<div class="userMessage">'+message.text+'</div></div>');
   $('#chats').append($newStuff);
+
+  $('.chat').click(function(){
+    app.addFriend(this);
+  });
 };
+
 app.send = function(message) {
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
@@ -44,12 +58,11 @@ app.fetch = function() {
     success: function (data) {
       console.log('chatterbox: Message sent');
       console.log(data);
-      // for(var i=0; i<data.results.length; i++) {
-      //   if(data.results[i].username === message.username) {
-      //     console.log(data.results[i]);
-      //   }
-      // }
-      // console.log(data.results[0].username);
+      for(var i=0; i<data.results.length; i++) {
+        if(data.results[i].username === window.location.search.slice(10)) {
+          console.log(data.results[i]);
+        }
+      }
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -62,7 +75,44 @@ app.addRoom = function(roomName) {
   $('#roomSelect').append('<option>'+roomName+'</option>');
 }
 
+app.addFriend = function(input){
+  console.log($($(input).children()[0]).text());
+};
 
 
-$('#submitButton').on('click', post('place_holder_for_stuff'));
+app.handleSubmit = function(){
+  var message = {
+    username : window.location.search.slice(10),
+    text : $('#message').val(),
+    roomname : $('#roomSelect').val()
+  };
+  app.send(message);
+};
+
+// $(document).ready(function(){  
+//   $('#form').submit(function(event){
+//     event.preventDefault();
+//     console.log('hah! got this!');
+//     app.handleSubmit();
+//   });
+// });
+
+
+$(document).ready(function(){
+  app.init();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
