@@ -57,12 +57,15 @@ form input[type=text] {
     width: 70%;
     font-size: 12px;
     padding: 5px;
+    overflow: auto;
 }
 
 .chat {
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
+    overflow: auto;
+    word-wrap: break-word;
 }
 
 .chat .username {
