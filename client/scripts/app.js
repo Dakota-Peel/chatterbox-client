@@ -24,8 +24,8 @@ app.clearMessages = function(){
   $('#chats').children().remove();
 };
 app.addMessage = function(message){
-  var $newStuff = $('<div class="chat"><div class = "username">'+message.username+'</div>'
-    +'<div class="userMessage">'+message.text+'</div></div>');
+  var $newStuff = $('<div class="chat"><div class = "username">'+escapeHtml(message.username)+'</div>'
+    +'<div class="userMessage">'+escapeHtml(message.text)+'</div></div>');
   $('#chats').append($newStuff);
 };
 
@@ -77,6 +77,7 @@ app.addRoom = function(roomName) {
 
 app.addFriend = function(input){
   console.log($($(input).children()[0]).text());
+
 };
 
 
@@ -99,7 +100,7 @@ $(document).ready(function(){
   app.init();
 });
 
-function updateDisplay(data) {
+function updateDisplay(data, friendName) {
   // clear current display
   app.clearMessages();
   // get current list of chat rooms
@@ -112,7 +113,7 @@ function updateDisplay(data) {
   // console.log(roomLists);
   // iterate through the data array
   for (var i=0; i<data.results.length; i++) {
-    var temp = data.results[i].roomname;
+    var temp = escapeHtml(data.results[i].roomname);
     // add chat room if we don't have one
     if(roomLists.indexOf(temp) === -1 && temp!==undefined) {
       // add this data roomname to our roomlist
@@ -128,16 +129,23 @@ function updateDisplay(data) {
       app.addMessage(data.results[i]);
     }
   }
+
+  // for
   // app.init();
   $('.chat').click(function(event){
     event.preventDefault();
-    app.addFriend(this);
+    // bold all friends
+    $($(this).children()[1]).addClass('friend');
   });
 }
 
+function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+};
 
-
-
+// function 
 
 
 
